@@ -3,7 +3,7 @@
 import { db, uid, audit } from '../db.js'
 
 export type JobKind = 'reminder' | 'morning_brief' | 'eod_recap' | 'overdue_scan' | 'investor_update' | 'monthly_close'
-  | 'invoice_chase' | 'analyze_problem' | 'escalation_check' | 'runway_check' | 'weekly_pipeline' | 'learn_corrections' | 'weekly_review' | 'recommend' | 'reindex_memory' | 'staff_load' | 'kpi_trend' | 'tripwire_check' | 'plan_adopted' | 'learn_playbook'
+  | 'invoice_chase' | 'analyze_problem' | 'escalation_check' | 'runway_check' | 'weekly_pipeline' | 'learn_corrections' | 'weekly_review' | 'recommend' | 'reindex_memory' | 'staff_load' | 'kpi_trend' | 'tripwire_check' | 'plan_adopted' | 'learn_playbook' | 'ask_clarification'
 export type Handler = (payload: Record<string, unknown>) => Promise<string | void>
 const handlers = new Map<JobKind, Handler>()
 export const register = (kind: JobKind, h: Handler) => handlers.set(kind, h)

@@ -368,3 +368,36 @@ register('learn_playbook', async p => {
 })
 
 export const _fmt = { fmtDate, fmtDateTime }
+
+// ─── Clarifying Question ───
+register('ask_clarification', async p => {
+  const prob = getDoc('problems', String(p.id))?.data
+  if (!prob) return 'no problem'
+  
+  const text = await chat({
+    system: "You are an AI assistant. The user logged a high-severity business problem but the description is too short (under 20 words). Ask exactly ONE short, highly-leverage clarifying question to get the missing context so you can solve it. Return ONLY the question string.",
+    user: `Problem: ${prob.title}\nDescription: ${prob.description}`,
+    temperature: 0.4
+  })
+  
+  const question = text.trim()
+  
+  // Create a recommendation for the Bot tab
+  const recId = uid()
+  const rec = {
+    id: recId,
+    conversationId: 'system',
+    category: 'problem',
+    itemText: question,
+    title: `Clarify: ${prob.title}`,
+    detail: `Please provide more details:\n${question}`,
+    urgency: 'high',
+    actions: [{ type: 'remind', label: 'ANSWER', text: `Regarding '${prob.title}', ${question}`, by: 'today' }],
+    status: 'new',
+    createdAt: new Date().toISOString()
+  }
+  putDoc('recommendations', recId, rec)
+  
+  await notify({ kind: 'solver', title: 'Action needed', body: question, link: { tab: 'bot' } })
+  return 'asked clarification'
+})

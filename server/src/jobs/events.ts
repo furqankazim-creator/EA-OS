@@ -23,7 +23,15 @@ export function onMutation(collection: Collection, doc: Record<string, unknown> 
     if (collection === 'problems' && doc.outcome === 'worked') enqueue('learn_playbook', Date.now() + 1000, { id: doc.id }, `playbook:${doc.id}`)
     if (collection === 'problems' || collection === 'conversations' || collection === 'decisions') enqueue('reindex_memory', Date.now() + 60_000, {}, `reindex:${Math.floor(Date.now() / 300_000)}`)
     if (collection === 'problems' && doc.severity === 'high' && !doc.analysis && doc.status === 'open') {
-      enqueue('analyze_problem', Date.now(), { id: doc.id }, `analyze:${doc.id}`)
+      // Clarifying question check
+      const desc = String(doc.description ?? '')
+      const wordCount = desc.split(/\s+/).filter(Boolean).length
+      if (wordCount < 20) {
+        patchDoc('problems', doc.id, { status: 'waiting_for_clarification' })
+        enqueue('ask_clarification', Date.now(), { id: doc.id }, `clarify:${doc.id}`)
+      } else {
+        enqueue('analyze_problem', Date.now(), { id: doc.id }, `analyze:${doc.id}`)
+      }
     }
     if (collection === 'conversations' && doc.extracted && (doc.status === 'extracted' || doc.status === 'committed') && !doc.recommendedAt) {
       enqueue('recommend', Date.now(), { id: doc.id }, `recommend:${doc.id}`)
