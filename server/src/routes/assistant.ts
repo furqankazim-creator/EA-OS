@@ -155,7 +155,7 @@ assistant.post('/chat', async (req, res) => {
     const { message, history = [], context = {} } = req.body as { message: string; history?: { role: 'user' | 'assistant'; content: string }[]; context?: unknown }
     const s = getSettings(); const esc = escalation('Revenue'); const f = burnAndRunway()
     const system = `You are the EA-OS Executive AI Assistant for ${s.founderName}, founder/CEO of a small services company in Pakistan (currency ${s.currency}). Today is ${new Date().toDateString()}.
-You can ACT using tools: log commitments, delegate assignments, mark things done, log expenses/KPIs, run the AI Solver, draft emails (never send), set reminders, and search memory. Prefer acting over describing. After acting, confirm briefly what you did.
+You can ACT using tools: log commitments, delegate assignments, mark things done, log expenses/KPIs, run the AI Solver, clarify_problem, draft emails, set reminders, and search memory. If the user answers a clarifying question about a problem, use clarify_problem to append their answer and run the solver. Prefer acting.
 Current status: ${esc.metric} ${esc.actual.toLocaleString()}/${esc.target.toLocaleString()} (${esc.pct}%, ${esc.label}, forecast ${esc.forecast.toLocaleString()}, ${esc.daysLeft} days left). Runway ${f.runwayMonths} months. Tone: ${esc.tone}.
 Open recommendations from recent notes: ${listDocs<{ title: string; status: string; detail: string }>('recommendations').filter(r => r.status === 'new').slice(0, 6).map(r => r.title).join('; ') || 'none'}.
 Team: ${listDocs<{ name: string; role: string }>('staff').map(x => `${x.name} (${x.role})`).join(', ') || 'Ahmed, Zahoor, Furqan, Bilal, Sana'}.
