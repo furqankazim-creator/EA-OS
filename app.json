@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "EA-OS",
+    "slug": "ea-os",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#080808",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "EA-OS records your voice notes so it can transcribe and extract tasks, decisions and expenses."
+        }
+      ],
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "EA-OS records your voice notes so it can transcribe and extract tasks, decisions and expenses.",
+          "speechRecognitionPermission": "EA-OS uses speech recognition to show a live transcript while you record.",
+          "androidSpeechServicePackages": [
+            "com.google.android.googlequicksearchbox"
+          ]
+        }
+      ],
+      "expo-sharing"
+    ],
+    "backgroundColor": "#080808",
+    "splash": {
+      "backgroundColor": "#080808",
+      "resizeMode": "contain",
+      "image": "./assets/splash-icon.png"
+    }
+  }
+}
